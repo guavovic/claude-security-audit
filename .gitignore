@@ -1,0 +1,4 @@
+regras-locais.md
+__pycache__/
+*.pyc
+auditorias/
