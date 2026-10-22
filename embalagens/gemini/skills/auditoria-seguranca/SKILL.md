@@ -39,6 +39,8 @@ Descubra lendo o código, não perguntando. Pergunte só o que o código não re
 4. **Superfície**: liste as rotas/páginas e endpoints. Marque cada um como **público** (sem login), **logado** ou **admin**.
 5. **Quem ataca e por quê**: bot genérico (todo site), spam de formulário, scraping, conta roubada, fraude em pagamento, abuso de API paga (LLM, SMS, e-mail custam dinheiro).
 
+**Checklist por stack:** com a stack descoberta no item 2, leia só o arquivo de `references/stacks/` de cada tecnologia que o projeto usa de fato: `vercel.md`, `astro.md`, `pwa.md` (service worker ou manifesto), `supabase.md`, `firebase.md`, `aspnet.md`. Stack sem arquivo segue só o checklist geral. Cada item desses arquivos já diz quando não se aplica: isso entra na parte "o que não precisa" do relatório.
+
 Com isso, preencha a matriz (ela vai no relatório):
 
 | Proteção | Estático | Formulário | Login | Pagamento | API pública | LLM |
@@ -136,4 +138,4 @@ Cada achado: **o quê**, **evidência** (arquivo:linha ou resposta), **impacto r
 - Correção: só com ok, uma branch por tema. Segredo vazado: primeiro o dono revoga, depois limpa o código.
 - Se o usuário quiser revisão recorrente, ofereça agendar (se a ferramenta tiver agendamento).
 
-Checklist completo por tema: `references/checklist.md`.
+Checklist completo por tema: `references/checklist.md`. Detalhe por stack: `references/stacks/`.
