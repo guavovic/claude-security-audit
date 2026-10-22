@@ -15,7 +15,7 @@ Segurança fica na skill `auditoria-seguranca` e risco jurídico na `auditoria-l
 
 1. **Tipo**: portfólio, landing de produto, institucional de negócio, negócio local (endereço físico), loja, app web, blog.
 2. **Objetivo do site**: contato, venda, cadastro, mostrar trabalho. Isso decide o que é "conversão".
-3. **Stack e hospedagem**: Astro, Next, estático, Vercel, Netlify, VPS.
+3. **Stack e hospedagem**: Astro, Next, estático, Vercel, Netlify, VPS. Descoberta a stack, leia só o arquivo de `references/stacks/` de cada tecnologia usada: `vercel.md`, `astro.md`, `pwa.md` (service worker ou manifesto). Stack sem arquivo segue só o checklist geral.
 
 Itens de conversão e de negócio local **só entram quando fazem sentido**:
 
