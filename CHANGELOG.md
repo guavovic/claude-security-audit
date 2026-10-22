@@ -7,6 +7,8 @@
 - As skills acham o script de checagem passiva pela própria pasta (`${CLAUDE_SKILL_DIR}`), em vez do caminho fixo em `~/.claude/skills/`, e passam o caminho pro subagente no pedido. Assim funciona tanto no plugin quanto na cópia manual.
 - Embalagens pro OpenAI Codex, Gemini CLI, Cursor e GitHub Copilot em `embalagens/`, geradas de `skills/` e `agents/` por `ferramentas/gerar_embalagens.py` (Python sem dependência, com `--conferir`). Nas cópias, o caminho do script vira relativo à pasta da skill, a descrição vai entre aspas no frontmatter e o texto diz o que fazer quando não há subagente. Ainda sem teste em cada ferramenta (#14).
 - `AGENTS.md` na raiz, dizendo por onde começar e quais são as regras do repositório.
+- Checklists por stack, lidos só quando o projeto usa aquela tecnologia: Vercel, Astro, PWA/service worker, Supabase, Firebase e ASP.NET na auditoria de segurança, e Vercel, Astro e PWA na de site (#6).
+- Auditoria legal cobre e-mail marketing (opt-in e descadastro), cobrança por Pix e gateway, GDPR pra público europeu e jogo com ranking online (#7).
 - Checagem passiva reconhece o fallback de SPA (sitemap, 404, sourcemap e arquivos sensíveis que na verdade são a home) e API sem página na raiz (`--rota`, headers de página rebaixados pra `info` em resposta JSON, checagens de SEO puladas). Mais plataformas na lista de subdomínios sem DNS próprio (Render, Fly, Railway, Heroku, Azure, Firebase). Veio da rodada na achai-api.
 
 ## v0.1.0 (21/10/2026)
