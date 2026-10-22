@@ -40,12 +40,12 @@ Matriz (vai no relatório, com o "não precisa" explicado):
 
 ## 2. Verificação
 
-Parte braçal (Lighthouse, script passivo, npm audit, buscas no código, axe no navegador): delegue ao subagente `auditoria-executor` (Sonnet), passando o alvo, o que verificar e onde salvar. Eu fico com perfil, análise, severidade e relatório.
+Parte braçal (Lighthouse, script passivo, npm audit, buscas no código, axe no navegador): delegue ao subagente `auditoria-executor` (Sonnet), passando o alvo, o que verificar, onde salvar e o caminho completo do script e de `references/comandos.md` da skill `auditoria-seguranca` (ele não tem como descobrir sozinho onde as skills foram instaladas). Eu fico com perfil, análise, severidade e relatório.
 
 Siga `references/checklist.md`. Ferramentas:
 
 - **Navegador**: Playwright (o perfil indicado nas regras locais, se houver). Abrir o site com armazenamento limpo, **sem aceitar nada**, e listar cookies e requisições a terceiros feitas antes do consentimento. Depois recusar e conferir de novo. Depois aceitar.
-- **Script passivo** (`~/.claude/skills/auditoria-seguranca/scripts/checagem_passiva.py`): os itens do grupo `legal` (alt, scripts de terceiros, rastreadores, links de privacidade/termos/cookies) são o ponto de partida.
+- **Script passivo** (`${CLAUDE_SKILL_DIR}/../auditoria-seguranca/scripts/checagem_passiva.py`): os itens do grupo `legal` (alt, scripts de terceiros, rastreadores, links de privacidade/termos/cookies) são o ponto de partida.
 - **Código**: grep por `gtag`, `googletagmanager`, `fbq`, `clarity`, `hotjar`, `analytics`, scripts externos, fontes do Google carregadas de fora, campos de formulário.
 - **Acessibilidade**: axe-core injetado na página pelo Playwright, mais conferência manual de navegação por teclado (Tab, Shift+Tab, Enter, Esc) e foco visível.
 - **Imagens e fontes**: de onde vieram (pasta do projeto, histórico do git, banco de imagens) e se a licença permite o uso.

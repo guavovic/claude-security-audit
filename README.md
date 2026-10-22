@@ -29,9 +29,18 @@ Junto vêm um **script de checagem passiva** (Python sem dependências, saída e
 
 ## Instalação
 
-Copie as pastas de `skills/` pra `~/.claude/skills/` e o arquivo de `agents/` pra `~/.claude/agents/`. As skills são chamadas pelo pedido ("audita a segurança desse projeto", "o site tá pronto pra lançar?") ou pelo nome.
+Como plugin do Claude Code, dentro de uma sessão:
 
-Regras só suas (alvos que não podem ser tocados, onde salvar o relatório, qual perfil de navegador usar) vão num `regras-locais.md` dentro da pasta de cada skill. Ele é lido antes de tudo e fica fora do git.
+```
+/plugin marketplace add guavovic/launch-audit
+/plugin install launch-audit@launch-audit
+```
+
+Ou pelo terminal, com `claude plugin marketplace add guavovic/launch-audit` e `claude plugin install launch-audit@launch-audit`. O plugin traz as três skills e o subagente `auditoria-executor`. As skills são chamadas pelo pedido ("audita a segurança desse projeto", "o site tá pronto pra lançar?") ou pelo nome, como `/launch-audit:auditoria-seguranca`. Pra receber as mudanças depois: `/plugin marketplace update launch-audit`.
+
+Sem plugin, também dá pra copiar as pastas de `skills/` pra `~/.claude/skills/` e o arquivo de `agents/` pra `~/.claude/agents/`. Use um jeito ou o outro, não os dois juntos, senão cada skill aparece duas vezes.
+
+Regras só suas (alvos que não podem ser tocados, onde salvar o relatório, qual perfil de navegador usar) vão num `regras-locais.md` dentro da pasta de cada skill. Ele é lido antes de tudo e fica fora do git. Na instalação por plugin a pasta é substituída a cada atualização, então quem usa regras locais prefere a cópia manual (ou um link pra um clone do repositório).
 
 ## Limites
 

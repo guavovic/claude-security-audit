@@ -1,0 +1,12 @@
+{
+  "name": "launch-audit",
+  "description": "Auditoria de site, API ou aplicativo antes de ir ao ar: segurança, risco jurídico no Brasil e qualidade de lançamento, com evidência e com o que o projeto não precisa.",
+  "author": {
+    "name": "Gustavo Victor",
+    "url": "https://github.com/guavovic"
+  },
+  "homepage": "https://github.com/guavovic/launch-audit",
+  "repository": "https://github.com/guavovic/launch-audit",
+  "license": "MIT",
+  "keywords": ["auditoria", "seguranca", "lgpd", "lancamento", "seo", "acessibilidade"]
+}
