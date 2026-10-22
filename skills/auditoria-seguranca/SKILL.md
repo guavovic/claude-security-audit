@@ -89,8 +89,12 @@ O objetivo aqui é **confirmar o controle**, não explorar. Basta uma evidência
 **Em produção (passivo)**: rode o script, que faz uma requisição por item com pausa entre elas e devolve JSON:
 
 ```bash
-python -I ~/.claude/skills/auditoria-seguranca/scripts/checagem_passiva.py https://SITE --saida <pasta-temporaria>/passiva.json [--comparar <relatorio-anterior>.json]
+python -I ~/.claude/skills/auditoria-seguranca/scripts/checagem_passiva.py https://SITE --saida <pasta-temporaria>/passiva.json [--comparar <relatorio-anterior>.json] [--rota /uma/rota/real]
 ```
+
+Pra **API sem página na raiz**, passe `--rota` com uma rota real: os headers são lidos dela, e as checagens de página (head, SEO, robots, sitemap) são puladas. Em resposta JSON, CSP, Permissions-Policy e proteção contra iframe saem como `info`; `nosniff` e HSTS continuam contando. No Git Bash, rode com `MSYS_NO_PATHCONV=1`, senão ele transforma `/rota` em caminho do Windows.
+
+Site com **fallback de SPA** (qualquer caminho devolve a home com 200) aparece marcado no detalhe: sitemap que não existe, 404 que não existe e arquivos que só parecem estar lá.
 
 Ele cobre HTTPS e HSTS, TLS (versão, validade, TLS antigo), headers, CSP, cookies, compressão, `<head>` (title, description, og, favicon, lang, alt), scripts de terceiros e rastreadores, robots, sitemap, 404, sourcemap, arquivos sensíveis expostos e DNS (SPF, DMARC, CAA, MX). Guarde o JSON junto do relatório pra comparar na próxima revisão.
 
