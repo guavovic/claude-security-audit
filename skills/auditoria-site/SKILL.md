@@ -34,12 +34,12 @@ Nada de inventar avaliação, case, número de clientes ou selo: isso é risco l
 
 ## 2. Verificação
 
-Parte braçal (Lighthouse, script passivo, npm audit, buscas no código, axe no navegador): delegue ao subagente `auditoria-executor` (Sonnet), passando o alvo, o que verificar e onde salvar. Eu fico com perfil, análise, severidade e relatório.
+Parte braçal (Lighthouse, script passivo, npm audit, buscas no código, axe no navegador): delegue ao subagente `auditoria-executor` (Sonnet), passando o alvo, o que verificar, onde salvar e o caminho completo do script e de `references/comandos.md` da skill `auditoria-seguranca` (ele não tem como descobrir sozinho onde as skills foram instaladas). Eu fico com perfil, análise, severidade e relatório.
 
 Siga `references/checklist.md`. Ferramentas:
 
 - **Navegador**: Playwright (o perfil indicado nas regras locais, se houver). Testar em 1366x768 e 390x844 (celular), com print de cada problema.
-- **Checagem automática do `<head>`, robots, sitemap, 404, TLS e DNS**: o script `~/.claude/skills/auditoria-seguranca/scripts/checagem_passiva.py` (ver a skill de segurança). Rode o Lighthouse **antes** dele, porque o anti-bot da hospedagem pode bloquear o IP depois.
+- **Checagem automática do `<head>`, robots, sitemap, 404, TLS e DNS**: o script `${CLAUDE_SKILL_DIR}/../auditoria-seguranca/scripts/checagem_passiva.py` (ver a skill de segurança). Rode o Lighthouse **antes** dele, porque o anti-bot da hospedagem pode bloquear o IP depois.
 - **Velocidade**: `npx --yes lighthouse@12 <url> --chrome-flags="--headless=new" --output=json` (mobile) e com `--preset=desktop`, salvando numa pasta temporária. A API do PageSpeed sem chave usa uma cota anônima que costuma estar esgotada: se o usuário tiver uma chave, passe `&key=`; senão, use o Lighthouse local. Simular rede móvel lenta no Playwright pra ver o "abrir no 5G/4G ruim".
 - **Links**: `npx --yes linkinator <url> --recurse` (ou rastrear pelo sitemap).
 - **SEO e social**: ler o `<head>` de cada página; conferir `sitemap.xml`, `robots.txt`; validar prévia com o depurador da Meta e o Rich Results Test do Google.

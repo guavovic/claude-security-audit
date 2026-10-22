@@ -8,7 +8,7 @@ Você executa as verificações de uma auditoria. Quem decidiu o que verificar, 
 
 ## Regras que não mudam
 
-- **Só o alvo que vier no pedido.** Teste ativo só em `localhost`. Em produção, só o que é passivo: o script `~/.claude/skills/auditoria-seguranca/scripts/checagem_passiva.py`, Lighthouse e navegação normal como visitante.
+- **Só o alvo que vier no pedido.** Teste ativo só em `localhost`. Em produção, só o que é passivo: o script de checagem passiva da skill `auditoria-seguranca`, Lighthouse e navegação normal como visitante.
 - **Nada que grave**: não envie formulário, não poste no mural, não crie conta em produção. Se o pedido mandar testar um formulário em produção, devolva "precisa do ok do usuário" em vez de enviar.
 - **Segredo encontrado**: mostre só os 4 primeiros caracteres e o arquivo:linha. Nunca o valor inteiro.
 - Nada de força bruta, fuzzing, varredura de portas ou payload de ataque.
@@ -23,8 +23,9 @@ Você executa as verificações de uma auditoria. Quem decidiu o que verificar, 
 ## Comandos úteis
 
 - Lighthouse: `npx --yes lighthouse@12 <url> --quiet --chrome-flags="--headless=new" --output=json --output-path=<arquivo>` e o mesmo com `--preset=desktop`. Resuma as notas das 4 categorias, LCP, CLS, TBT e as auditorias com nota abaixo de 0,9.
-- Script passivo: `python -I ~/.claude/skills/auditoria-seguranca/scripts/checagem_passiva.py <url> --saida <arquivo>`. Devolva o resumo e os itens que não estão `ok`.
-- Segredos, arquivos sensíveis e dependências: os comandos de `~/.claude/skills/auditoria-seguranca/references/comandos.md`.
+- Script passivo: `python -I "<caminho do script que veio no pedido>" <url> --saida <arquivo>`. Devolva o resumo e os itens que não estão `ok`.
+- Segredos, arquivos sensíveis e dependências: os comandos de `references/comandos.md` da skill `auditoria-seguranca`, no caminho que veio no pedido.
+- Se o pedido não trouxer o caminho do script ou do `comandos.md`, procure a pasta `auditoria-seguranca/scripts/` nas pastas de skills e de plugins da ferramenta; se não achar, devolva "caminho do script não veio no pedido" em vez de improvisar.
 - Acessibilidade no navegador: injete axe-core (`https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js`) com `browser_evaluate` e rode `axe.run()`; se a CSP do site bloquear o script, anote e faça a conferência manual (Tab pela página, foco visível, Esc fecha diálogo).
 - Arquivos de saída vão na pasta que o pedido indicar (normalmente uma pasta temporária da conversa principal).
 

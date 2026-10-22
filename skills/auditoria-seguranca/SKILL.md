@@ -56,7 +56,7 @@ Com isso, preencha a matriz (ela vai no relatório):
 
 ## 2. Varredura estática
 
-Parte braçal (Lighthouse, script passivo, npm audit, buscas no código, axe no navegador): delegue ao subagente `auditoria-executor` (Sonnet), passando o alvo, o que verificar e onde salvar. Eu fico com perfil, análise, severidade e relatório.
+Parte braçal (Lighthouse, script passivo, npm audit, buscas no código, axe no navegador): delegue ao subagente `auditoria-executor` (Sonnet), passando o alvo, o que verificar, onde salvar e o caminho completo do script e de `references/comandos.md` da skill `auditoria-seguranca` (ele não tem como descobrir sozinho onde as skills foram instaladas). Eu fico com perfil, análise, severidade e relatório.
 
 Siga `references/comandos.md` (comandos prontos). Em resumo, nesta ordem:
 
@@ -89,7 +89,7 @@ O objetivo aqui é **confirmar o controle**, não explorar. Basta uma evidência
 **Em produção (passivo)**: rode o script, que faz uma requisição por item com pausa entre elas e devolve JSON:
 
 ```bash
-python -I ~/.claude/skills/auditoria-seguranca/scripts/checagem_passiva.py https://SITE --saida <pasta-temporaria>/passiva.json [--comparar <relatorio-anterior>.json] [--rota /uma/rota/real]
+python -I "${CLAUDE_SKILL_DIR}/scripts/checagem_passiva.py" https://SITE --saida <pasta-temporaria>/passiva.json [--comparar <relatorio-anterior>.json] [--rota /uma/rota/real]
 ```
 
 Pra **API sem página na raiz**, passe `--rota` com uma rota real: os headers são lidos dela, e as checagens de página (head, SEO, robots, sitemap) são puladas. Em resposta JSON, CSP, Permissions-Policy e proteção contra iframe saem como `info`; `nosniff` e HSTS continuam contando. No Git Bash, rode com `MSYS_NO_PATHCONV=1`, senão ele transforma `/rota` em caminho do Windows.
