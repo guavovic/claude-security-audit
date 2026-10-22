@@ -1,0 +1,13 @@
+<!-- Arquivo gerado por ferramentas/gerar_embalagens.py a partir de skills/ e agents/. Não edite à mão: mude a fonte e rode o script de novo. -->
+
+# launch-audit
+
+Auditoria de site, API ou aplicativo antes de ir ao ar, em três skills:
+
+- `auditoria-legal`: Audita os riscos jurídicos de um site ou aplicativo no Brasil pra não ser processado nem multado.
+- `auditoria-seguranca`: Audita a segurança real de um site, API ou aplicativo do usuário.
+- `auditoria-site`: Audita se um site está pronto pra lançar e se mantém saudável.
+
+Quando o pedido for auditar segurança, risco jurídico no Brasil ou se o site está pronto pra lançar, carregue a skill certa e siga o SKILL.md dela, incluindo o `regras-locais.md` da pasta se existir. Pra "auditoria completa", rode as três, na ordem segurança, legal, site.
+
+A parte braçal (Lighthouse, script de checagem passiva, buscas no código, navegador) vai pro subagente `auditoria-executor` quando a ferramenta tiver subagente. Se não tiver, ou se ele estiver desligado, o agente principal faz essa parte com as mesmas regras: só o alvo pedido, teste ativo só em localhost, nada que grave em produção, segredo com só 4 caracteres à mostra.

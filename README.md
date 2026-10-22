@@ -40,6 +40,10 @@ Ou pelo terminal, com `claude plugin marketplace add guavovic/launch-audit` e `c
 
 Sem plugin, também dá pra copiar as pastas de `skills/` pra `~/.claude/skills/` e o arquivo de `agents/` pra `~/.claude/agents/`. Use um jeito ou o outro, não os dois juntos, senão cada skill aparece duas vezes.
 
+### Outras ferramentas
+
+As skills seguem o formato aberto de Agent Skills, então a mesma fonte gera embalagens pro OpenAI Codex, o Gemini CLI, o Cursor e o GitHub Copilot, em [`embalagens/`](embalagens/), com o lugar de cada uma no [`embalagens/README.md`](embalagens/README.md). Elas existem, mas ainda não foram testadas em cada ferramenta: esse teste é a [#14](https://github.com/guavovic/launch-audit/issues/14), e só depois dele o README passa a dizer que funciona lá. Onde a ferramenta não tiver subagente, o agente principal faz a parte braçal com as mesmas regras.
+
 Regras só suas (alvos que não podem ser tocados, onde salvar o relatório, qual perfil de navegador usar) vão num `regras-locais.md` dentro da pasta de cada skill. Ele é lido antes de tudo e fica fora do git. Na instalação por plugin a pasta é substituída a cada atualização, então quem usa regras locais prefere a cópia manual (ou um link pra um clone do repositório).
 
 ## Limites
