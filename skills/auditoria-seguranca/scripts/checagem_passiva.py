@@ -3,7 +3,7 @@
 Faz só GETs simples (uma requisição por item) e consultas DNS públicas. Nada de fuzzing, força bruta ou escrita.
 
 Uso:
-    python -I checagem_passiva.py https://site.com [--saida resultado.json] [--comparar anterior.json]
+    python -I checagem_passiva.py https://site.com [--saida resultado.json] [--comparar anterior.json] [--rota /rota/real]
 """
 
 import argparse
@@ -49,6 +49,16 @@ ARQUIVOS_SENSIVEIS = {
 }
 
 resultados = []
+HOME = {"corpo": ""}
+
+
+def e_fallback(corpo):
+    """SPA que devolve a home com 200 pra qualquer caminho."""
+    return bool(HOME["corpo"].strip()) and corpo.strip() == HOME["corpo"].strip()
+
+
+def detalhe_status(status, corpo):
+    return f"{status} com a home (fallback de SPA)" if status == 200 and e_fallback(corpo) else str(status)
 
 
 def desafiado(status, headers):
@@ -192,11 +202,17 @@ def checar_https(base):
 
 
 def checar_headers(headers):
+    # Em resposta JSON (API), CSP, Permissions-Policy e iframe pesam pouco; nosniff e HSTS continuam valendo.
+    api = "json" in (headers.get("content-type") or "")
+    so_html = ("content-security-policy", "permissions-policy")
     for h, nome in HEADERS_SEGURANCA.items():
         valor = headers.get(h)
-        registrar(f"header-{nome}", "ok" if valor else "falha", valor or "ausente", "seguranca")
+        falta = "info" if api and h in so_html else "falha"
+        registrar(f"header-{nome}", "ok" if valor else falta,
+                  valor or ("ausente (resposta JSON: opcional)" if falta == "info" else "ausente"), "seguranca")
     if not (headers.get("x-frame-options") or "frame-ancestors" in (headers.get("content-security-policy") or "")):
-        registrar("header-clickjacking", "falha", "sem X-Frame-Options nem frame-ancestors", "seguranca")
+        registrar("header-clickjacking", "info" if api else "falha",
+                  "sem X-Frame-Options nem frame-ancestors" + (" (resposta JSON: opcional)" if api else ""), "seguranca")
     else:
         registrar("header-clickjacking", "ok", "protegido", "seguranca")
     csp = headers.get("content-security-policy") or ""
@@ -265,7 +281,7 @@ def checar_arquivos(base):
             status, _, corpo, _ = buscar_texto(base + caminho, seguir=False)
             exposto = status == 200 and parece(corpo)
             registrar(f"exposto{caminho}", "falha" if exposto else "ok",
-                      f"{status}: CONTEÚDO REAL PÚBLICO" if exposto else f"{status}", "seguranca")
+                      f"{status}: CONTEÚDO REAL PÚBLICO" if exposto else detalhe_status(status, corpo), "seguranca")
         except Bloqueado as b:
             registrar(f"exposto{caminho}", "bloqueado", f"anti-bot respondeu {b}: não verificado", "seguranca")
         except Exception as e:
@@ -279,15 +295,36 @@ def checar_sourcemaps(base, p):
             status, _, corpo, _ = buscar_texto(url + ".map", seguir=False)
             exposto = status == 200 and '"mappings"' in corpo
             registrar(f"sourcemap:{urllib.parse.urlparse(url).path}", "aviso" if exposto else "ok",
-                      "sourcemap público (expõe o código-fonte)" if exposto else str(status), "seguranca")
+                      "sourcemap público (expõe o código-fonte)" if exposto else detalhe_status(status, corpo), "seguranca")
         except Bloqueado as b:
             registrar("sourcemap", "bloqueado", f"anti-bot respondeu {b}: não verificado", "seguranca")
         except Exception as e:
             registrar("sourcemap", "info", f"erro: {e}", "seguranca")
 
 
-def checar_seo(base):
+def checar_seo(base, so_erro=False):
     host = urllib.parse.urlparse(base).hostname
+    if not so_erro:
+        checar_robots_sitemap(base, host)
+    try:
+        status, _, corpo, _ = buscar_texto(base + "/esta-pagina-nao-existe-auditoria", seguir=True)
+        registrar("pagina-404", "ok" if status == 404 else "falha",
+                  "rota inexistente responde 200 com a home (fallback de SPA: o servidor não sabe quais rotas existem)"
+                  if status == 200 and e_fallback(corpo) else f"rota inexistente responde {status}", "site")
+        if re.search(r"(stack|traceback|exception|at [\w.]+\(|node_modules|\.cs:line)", corpo, re.I):
+            registrar("404-vaza", "aviso", "página de erro parece mostrar detalhe técnico", "seguranca")
+    except Bloqueado as b:
+        registrar("pagina-404", "bloqueado", f"anti-bot respondeu {b}: não verificado", "site")
+    except Exception as e:
+        registrar("pagina-404", "info", f"erro: {e}", "site")
+    try:
+        status, _, _, _ = buscar_texto(base + "/.well-known/security.txt")
+        registrar("security.txt", "ok" if status == 200 else "info", f"{status} (opcional)", "seguranca")
+    except Exception:
+        pass
+
+
+def checar_robots_sitemap(base, host):
     try:
         status, _, robots, _ = buscar_texto(base + "/robots.txt")
         if status != 200:
@@ -309,7 +346,9 @@ def checar_seo(base):
         status, _, sm, _ = buscar_texto(base + "/sitemap.xml")
         urls = re.findall(r"<loc>([^<]+)</loc>", sm)
         de_fora = [u for u in urls if urllib.parse.urlparse(u).hostname != host]
-        if status != 200 or not urls:
+        if status == 200 and e_fallback(sm):
+            registrar("sitemap.xml", "falha", "não existe: /sitemap.xml devolve a home (fallback de SPA)", "site")
+        elif status != 200 or not urls:
             registrar("sitemap.xml", "falha", f"{status}, {len(urls)} URLs", "site")
         else:
             registrar("sitemap.xml", "aviso" if de_fora else "ok",
@@ -318,26 +357,13 @@ def checar_seo(base):
         registrar("sitemap.xml", "bloqueado", f"anti-bot respondeu {b}: não verificado", "site")
     except Exception as e:
         registrar("sitemap.xml", "info", f"erro: {e}", "site")
-    try:
-        status, _, corpo, _ = buscar_texto(base + "/esta-pagina-nao-existe-auditoria", seguir=True)
-        registrar("pagina-404", "ok" if status == 404 else "falha", f"rota inexistente responde {status}", "site")
-        if re.search(r"(stack|traceback|exception|at [\w.]+\(|node_modules|\.cs:line)", corpo, re.I):
-            registrar("404-vaza", "aviso", "página de erro parece mostrar detalhe técnico", "seguranca")
-    except Bloqueado as b:
-        registrar("pagina-404", "bloqueado", f"anti-bot respondeu {b}: não verificado", "site")
-    except Exception as e:
-        registrar("pagina-404", "info", f"erro: {e}", "site")
-    try:
-        status, _, _, _ = buscar_texto(base + "/.well-known/security.txt")
-        registrar("security.txt", "ok" if status == 200 else "info", f"{status} (opcional)", "seguranca")
-    except Exception:
-        pass
 
 
 def checar_dns(base):
     host = urllib.parse.urlparse(base).hostname
     partes = host.split(".")
-    if host.endswith((".vercel.app", ".netlify.app", ".github.io", ".pages.dev")):
+    if host.endswith((".vercel.app", ".netlify.app", ".github.io", ".pages.dev", ".onrender.com", ".fly.dev",
+                      ".up.railway.app", ".herokuapp.com", ".azurewebsites.net", ".web.app", ".firebaseapp.com")):
         registrar("dns", "info", f"{host} é subdomínio da plataforma: SPF/DMARC/CAA não se aplicam até ter domínio próprio", "site")
         return
     dominio = ".".join(partes[-2:]) if not host.endswith(".com.br") else ".".join(partes[-3:])
@@ -377,6 +403,7 @@ def main():
     ap.add_argument("url")
     ap.add_argument("--saida")
     ap.add_argument("--comparar")
+    ap.add_argument("--rota", default="/", help="rota real de onde ler os headers (API sem página na raiz)")
     args = ap.parse_args()
     base = args.url.rstrip("/")
     if not base.startswith("https://"):
@@ -387,11 +414,18 @@ def main():
         status, headers, html, final = buscar_texto(base + "/")
     except Bloqueado as b:
         sys.exit(f"o anti-bot do site bloqueou até a home ({b}); espere uns minutos ou rode de outra rede")
-    registrar("home", "ok" if status == 200 else "falha", f"{status} em {final}", "site")
-    _, headers_comp, _, _ = buscar(base + "/")
+    HOME["corpo"] = html if status == 200 else ""
+    api = "json" in (headers.get("content-type") or "") or status == 404 and args.rota != "/"
+    registrar("home", "ok" if status == 200 else "info" if api else "falha",
+              f"{status} em {final}" + (" (API sem página na raiz)" if status != 200 and api else ""), "site")
+    _, headers_comp, _, _ = buscar(base + "/" + args.rota.lstrip("/"))
     checar_headers(headers_comp)
-    p = checar_cabeca(base, html)
-    checar_seo(base)
+    if status != 200 and api:
+        registrar("pagina", "info", "API sem página na raiz: head, SEO, robots e sitemap não se aplicam", "site")
+        p = Cabeca()
+    else:
+        p = checar_cabeca(base, html)
+    checar_seo(base, so_erro=status != 200 and api)
     checar_dns(base)
     checar_sourcemaps(base, p)
     checar_arquivos(base)

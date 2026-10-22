@@ -1,5 +1,9 @@
 # Mudanças
 
+## Próxima versão
+
+- Checagem passiva reconhece o fallback de SPA (sitemap, 404, sourcemap e arquivos sensíveis que na verdade são a home) e API sem página na raiz (`--rota`, headers de página rebaixados pra `info` em resposta JSON, checagens de SEO puladas). Mais plataformas na lista de subdomínios sem DNS próprio (Render, Fly, Railway, Heroku, Azure, Firebase). Veio da rodada na achai-api.
+
 ## v0.1.0 (21/10/2026)
 
 Primeira versão pública.
