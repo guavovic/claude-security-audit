@@ -1,6 +1,6 @@
 ---
 name: auditoria-legal
-description: Audita os riscos jurídicos de um site ou aplicativo no Brasil pra não ser processado nem multado: LGPD (base legal, só dados necessários, direitos do titular, encarregado, incidente), aviso e preferência de cookies, scripts de rastreamento e Google Analytics, política de privacidade, termos de uso, política de troca e reembolso e direito de arrependimento (CDC), dados legais da empresa no rodapé (Decreto 7.962), Marco Civil (guarda de logs), ECA Digital (público infantil), acessibilidade (LBI e WCAG: alt nas imagens, contraste, teclado), direitos autorais de imagem e fonte, marca, e promessa ou depoimento falso. Diz o que se aplica ao tipo de projeto e o que não. Use quando o usuário pedir "o site pode ser processado?", "tá dentro da LGPD?", "precisa de política de privacidade / termos / aviso de cookies?", "auditoria jurídica", "conformidade", "acessibilidade do site", ou antes de lançar algo que coleta dado ou vende.
+description: Audita os riscos jurídicos de um site ou aplicativo no Brasil pra não ser processado nem multado: LGPD (base legal, só dados necessários, direitos do titular, encarregado, incidente), aviso e preferência de cookies, scripts de rastreamento e Google Analytics, política de privacidade, termos de uso, política de troca e reembolso e direito de arrependimento (CDC), dados legais da empresa no rodapé (Decreto 7.962), Marco Civil (guarda de logs), ECA Digital (público infantil), acessibilidade (LBI e WCAG: alt nas imagens, contraste, teclado), direitos autorais de imagem e fonte, marca, promessa ou depoimento falso, e-mail marketing, Pix e gateway, GDPR e jogo com ranking online. Diz o que se aplica ao tipo de projeto e o que não. Use quando o usuário pedir "o site pode ser processado?", "tá dentro da LGPD?", "precisa de política de privacidade / termos / aviso de cookies?", "auditoria jurídica", "conformidade", "acessibilidade do site", "preciso do GDPR?", ou antes de lançar algo que coleta dado ou vende.
 ---
 
 # Auditoria legal
@@ -11,17 +11,18 @@ Objetivo: achar o que pode virar **processo, multa, reclamação no Procon ou de
 
 **Não é parecer jurídico.** Projeto que vende, guarda dado sensível, atende criança ou fatura de verdade: o relatório recomenda revisão por advogado e lista as perguntas pra levar. Texto de política nunca é inventado como se fosse padrão legal: é rascunho marcado pra revisão.
 
-Data de referência das regras: outubro de 2026. Antes de citar artigo ou prazo que pode ter mudado (resolução da ANPD, regulamentação do ECA Digital), confira no site oficial (planalto.gov.br, gov.br/anpd).
+Data de referência das regras: outubro de 2026. Antes de citar artigo ou prazo que pode ter mudado (resolução da ANPD, regulamentação do ECA Digital, regulamento do Pix), confira no site oficial (planalto.gov.br, gov.br/anpd).
 
 ## 1. Perfil do projeto
 
 Descubra pelo código e pelo site no ar:
 
 1. **Quem opera**: pessoa física (portfólio, projeto pessoal), MEI/empresa, cliente do usuário.
-2. **O que coleta**: formulário, cadastro, login social, newsletter, upload, localização, dado sensível (saúde, religião, biometria, origem racial, orientação sexual), dado de criança ou adolescente.
+2. **O que coleta**: formulário, cadastro, login social, newsletter ou lista de e-mail marketing, upload, localização, dado sensível (saúde, religião, biometria, origem racial, orientação sexual), dado de criança ou adolescente.
 3. **O que roda no navegador**: Analytics, Pixel da Meta, Hotjar/Clarity, Tag Manager, chat, vídeo embutido, fontes externas, mapa, captcha. Cada um é um terceiro recebendo dado.
-4. **Se vende**: produto, assinatura, serviço, doação, afiliado.
-5. **Público**: geral, profissional, ou provável de ter menor de idade (jogo, app escolar, rede social).
+4. **Se vende**: produto, assinatura, serviço, doação, afiliado, item dentro de jogo. Como cobra: Pix (QR Code, chave, Pix Automático), cartão por gateway, boleto.
+5. **Público**: geral, profissional, ou provável de ter menor de idade (jogo, app escolar, rede social). Se mira a União Europeia (idioma, euro, envio, campanha lá fora).
+6. **Se é jogo online**: ranking, chat, compra dentro do jogo, caixa de recompensa, prêmio.
 
 Matriz (vai no relatório, com o "não precisa" explicado):
 
@@ -37,12 +38,18 @@ Matriz (vai no relatório, com o "não precisa" explicado):
 | ECA Digital | - | - | - | - | sim |
 | Acessibilidade | sim | sim | sim | sim | sim |
 | Direito autoral de imagem, fonte, música | sim | sim | sim | sim | sim |
+| E-mail marketing (opt-in, descadastro) | só se tiver newsletter | se mandar marketing | se mandar marketing | se mandar oferta | só com consentimento de um responsável |
+| Pix e gateway (preço, estorno, devolução) | - | - | se cobrar | sim | se cobrar, reforçado |
+| GDPR | só se mirar público na UE | idem | idem | idem | idem, com idade da UE |
+| Jogo com ranking online | - | - | se for jogo | se vender item ou der prêmio | sim, com ECA Digital e loot box |
+
+Cada uma das quatro últimas linhas tem arquivo próprio em `references/` com quando se aplica, quando não, como verificar e o que recomendar: `email-marketing.md`, `pix-e-gateway.md`, `gdpr.md` e `jogo-online.md`. Só abrir o arquivo do tema que o perfil ativou.
 
 ## 2. Verificação
 
 Parte braçal (Lighthouse, script passivo, npm audit, buscas no código, axe no navegador): delegue ao subagente `auditoria-executor` (Sonnet), passando o alvo, o que verificar, onde salvar e o caminho completo do script e de `references/comandos.md` da skill `auditoria-seguranca` (ele não tem como descobrir sozinho onde as skills foram instaladas). Eu fico com perfil, análise, severidade e relatório.
 
-Siga `references/checklist.md`. Ferramentas:
+Siga `references/checklist.md` e, conforme o perfil, os arquivos de tema (`email-marketing.md`, `pix-e-gateway.md`, `gdpr.md`, `jogo-online.md`). Ferramentas:
 
 - **Navegador**: Playwright (o perfil indicado nas regras locais, se houver). Abrir o site com armazenamento limpo, **sem aceitar nada**, e listar cookies e requisições a terceiros feitas antes do consentimento. Depois recusar e conferir de novo. Depois aceitar.
 - **Script passivo** (`${CLAUDE_SKILL_DIR}/../auditoria-seguranca/scripts/checagem_passiva.py`): os itens do grupo `legal` (alt, scripts de terceiros, rastreadores, links de privacidade/termos/cookies) são o ponto de partida.
@@ -60,7 +67,7 @@ Salve em `auditorias/<projeto>-legal-AAAA-MM-DD.md` (na raiz do projeto auditado
 
 | Risco | Exemplo |
 |---|---|
-| Alto | Coleta sem política, rastreio antes do consentimento, venda sem dados da empresa ou sem arrependimento, imagem sem licença, depoimento inventado, dado sensível sem base legal |
+| Alto | Coleta sem política, rastreio antes do consentimento, venda sem dados da empresa ou sem arrependimento, imagem sem licença, depoimento inventado, dado sensível sem base legal, e-mail marketing para lista sem consentimento, pedido marcado como pago pela tela do cliente, loot box paga em jogo com público infantil, prêmio com taxa ou sorteio sem autorização |
 | Médio | Política genérica que não bate com o que o site faz, cookie banner sem opção de recusar, formulário pedindo dado que não usa |
 | Baixo | Link de política difícil de achar, data de atualização ausente |
 | Acessibilidade | Separado, com a regra WCAG de cada achado |
