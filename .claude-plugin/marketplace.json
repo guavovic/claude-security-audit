@@ -1,0 +1,16 @@
+{
+  "name": "launch-audit",
+  "description": "Marketplace do launch-audit: as três skills de auditoria e o subagente executor.",
+  "owner": {
+    "name": "Gustavo Victor",
+    "url": "https://github.com/guavovic"
+  },
+  "plugins": [
+    {
+      "name": "launch-audit",
+      "source": "./",
+      "description": "Skills auditoria-seguranca, auditoria-legal e auditoria-site, mais o subagente auditoria-executor pra parte braçal.",
+      "category": "security"
+    }
+  ]
+}
