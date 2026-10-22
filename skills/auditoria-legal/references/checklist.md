@@ -2,6 +2,8 @@
 
 Referências: LGPD (Lei 13.709/2018), guia orientativo de cookies da ANPD (2022), Resolução CD/ANPD 2/2022 (pequeno porte), 15/2024 (incidente) e 18/2024 (encarregado), CDC (Lei 8.078/1990), Decreto 7.962/2013 (comércio eletrônico), Marco Civil da Internet (Lei 12.965/2014), Lei Brasileira de Inclusão (Lei 13.146/2015, art. 63), ECA Digital (Lei 15.211/2025, em vigor desde 17/03/2026), Lei de Direitos Autorais (9.610/1998), Lei de Propriedade Industrial (9.279/1996), Código do CONAR. Conferir o texto oficial antes de citar artigo.
 
+Temas com arquivo próprio, abertos só quando o perfil pede: `email-marketing.md` (newsletter e oferta por e-mail), `pix-e-gateway.md` (cobrança, preço, estorno e devolução), `gdpr.md` (público na União Europeia) e `jogo-online.md` (ranking, público infantil, loot box e prêmio).
+
 ## LGPD
 
 - **Só dados necessários** (minimização): cada campo do formulário tem uso claro. CPF, telefone, data de nascimento só se forem usados de fato.
