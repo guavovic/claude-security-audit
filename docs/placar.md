@@ -27,7 +27,7 @@ Mesmo alvo, mesma versão do alvo, mesmo modelo, pra comparar versões da skill 
 
 ## Resultados
 
-Ainda sem rodadas publicadas. Cada rodada entra aqui com a versão da skill, a data e o link pro detalhe.
+Ainda sem rodadas publicadas contra os alvos acima. Cada rodada entra aqui com a versão da skill, a data e o link pro detalhe. As rodadas em sites reais ficam nos [estudos de caso](casos/), a começar pelo [guavovic-website](casos/guavovic-website.md).
 
 | Versão | Data | Alvo | Acertos | Falsos positivos | Fora do alcance |
 |---|---|---|---|---|---|
