@@ -9,6 +9,7 @@
 - `AGENTS.md` na raiz, dizendo por onde começar e quais são as regras do repositório.
 - Checklists por stack, lidos só quando o projeto usa aquela tecnologia: Vercel, Astro, PWA/service worker, Supabase, Firebase e ASP.NET na auditoria de segurança, e Vercel, Astro e PWA na de site (#6).
 - Auditoria legal cobre e-mail marketing (opt-in e descadastro), cobrança por Pix e gateway, GDPR pra público europeu e jogo com ranking online (#7).
+- Primeiro estudo de caso publicado: a rodada de 21/10/2026 no guavovic-website, com o que as skills acharam, o que não se aplicava e o que mudou nelas por causa disso, em `docs/casos/guavovic-website.md` (#5).
 - Checagem passiva reconhece o fallback de SPA (sitemap, 404, sourcemap e arquivos sensíveis que na verdade são a home) e API sem página na raiz (`--rota`, headers de página rebaixados pra `info` em resposta JSON, checagens de SEO puladas). Mais plataformas na lista de subdomínios sem DNS próprio (Render, Fly, Railway, Heroku, Azure, Firebase). Veio da rodada na achai-api.
 
 ## v0.1.0 (21/10/2026)
